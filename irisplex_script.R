@@ -13,7 +13,7 @@ file <- fread(file_path, skip = 5, col.names = c("Sample_Id","Sample_Name","Locu
 file[,tmp:=NULL]
 
 
-template<-read.csv("online.csv",header=T)
+template<-read.csv("template.csv",header=T)
 
 
 snp <- colnames(template)[-1]
@@ -21,15 +21,13 @@ snp <- substr(snp, 1, nchar(snp)-2)
 
 file2 <- file[file$Locus %in% snp,c("Sample_Name","Locus","Genotype")]
 
-file3 <- dcast(file2, Sample_Name ~ Locus, value.var = "Genotype")
+online <- dcast(file2, Sample_Name ~ Locus, value.var = "Genotype")
 
-file3$rs312262906 <- "NN"
+online$rs312262906 <- "NN"
 
-setcolorder(file3, c("Sample_Name",snp))
+setcolorder(online, c("Sample_Name",snp))
 
-colnames(file3) <- colnames(template)
-
-online <- file3
+colnames(online) <- colnames(template)
 
 online$rs312262906_A<-gsub('C/C', '0', online$rs312262906_A)
 online$rs312262906_A<-gsub('CC', '0', online$rs312262906_A)
